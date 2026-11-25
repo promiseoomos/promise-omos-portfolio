@@ -1,86 +1,52 @@
-import React from "react";
-import { ExternalLink, Github } from "lucide-react";
+import { ArrowUpRight, Github, LockKeyhole } from "lucide-react";
 import { projects } from "../data/projectsData";
+
+function ProjectVisual({ project }) {
+  return (
+    <div className={`project-visual project-visual--${project.theme}`} aria-hidden="true">
+      <span className="visual-index">{project.number}</span>
+      <div className="visual-window">
+        <div className="visual-window-bar"><i /><i /><i /></div>
+        <div className="visual-window-body">
+          <span className="visual-line visual-line--wide" />
+          <span className="visual-line" />
+          <div className="visual-modules"><i /><i /><i /></div>
+          <div className="visual-chart"><i /><i /><i /><i /><i /></div>
+        </div>
+      </div>
+      <span className="visual-caption">ENGINEERED / DELIVERED</span>
+    </div>
+  );
+}
 
 export default function ProjectsSection() {
   return (
-    <section id="projects" className="py-24 px-4 relative">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-5xl md:text-6xl font-black mb-4">
-            Featured{" "}
-            <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-              Projects
-            </span>
-          </h2>
-          <p className="text-xl text-gray-400">
-            Showcasing my best work and technical expertise
-          </p>
+    <section id="work" className="section section-grid work-section">
+      <div className="page-shell">
+        <div className="section-heading section-heading--split">
+          <div><span className="section-kicker">01 / Selected work</span><h2>Proof, not promises.</h2></div>
+          <p>A selection of software products and engineered systems designed to solve real operational problems.</p>
         </div>
 
-        {/* Project Cards */}
-        <div className="grid md:grid-cols-3 gap-8">
-          {projects.map((project, idx) => (
-            <div
-              key={idx}
-              className="group h-full rounded-2xl border border-purple-500/20 bg-gradient-to-br from-black to-purple-900/20 overflow-hidden hover:border-purple-400/50 transition-all duration-300 hover:shadow-2xl hover:shadow-purple-500/20 flex flex-col"
-            >
-              {/* Image Section */}
-              <div
-                className={`h-70 bg-gradient-to-br ${project.gradient} relative overflow-hidden flex items-center justify-center`}
-              >
-                <img
-                  src={project.img}
-                  className="text-7xl group-hover:scale-125 transition-transform duration-300"
-                />
-                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors"></div>
-              </div>
-
-              {/* Content Section */}
-              <div className="p-8 flex flex-col h-full">
-                <h3 className="text-2xl font-bold mb-3 group-hover:text-purple-300 transition-colors">
-                  {project.name}
-                </h3>
-                <p className="text-gray-400 mb-6 leading-relaxed flex-grow">
-                  {project.description}
-                </p>
-
-                {/* Tech Tags */}
-                <div className="flex flex-wrap gap-2 mb-6">
-                  {project.tech.map((tech, i) => (
-                    <span
-                      key={i}
-                      className="px-3 py-1 bg-purple-500/20 border border-purple-400/30 rounded-full text-xs font-semibold text-purple-300 group-hover:border-purple-300 transition-colors"
-                    >
-                      {tech}
-                    </span>
-                  ))}
+        <div className="projects-list">
+          {projects.map((project) => (
+            <article className="project-card" key={project.name}>
+              <ProjectVisual project={project} />
+              <div className="project-content">
+                <div className="project-meta"><span>{project.client}</span><span>{project.status}</span></div>
+                <h3>{project.name}</h3>
+                <p>{project.description}</p>
+                <div className="project-outcome">{project.outcome}</div>
+                <div className="tag-list">
+                  {project.tech.map((item) => <span key={item}>{item}</span>)}
                 </div>
-
-                {/* Action Buttons */}
-                <div className="flex gap-3 mt-auto">
-                  <a
-                    href={project.liveUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg font-semibold text-sm hover:shadow-lg hover:shadow-purple-500/50 transition-all duration-300 transform hover:scale-105"
-                  >
-                    <ExternalLink size={16} />
-                    Live
-                  </a>
-                  <a
-                    href={project.githubUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2 border border-purple-400/50 rounded-lg font-semibold text-sm hover:bg-purple-400/10 transition-all duration-300"
-                  >
-                    <Github size={16} />
-                    Code
-                  </a>
+                <div className="project-links">
+                  {project.liveUrl && <a href={project.liveUrl} target="_blank" rel="noreferrer">Visit live project <ArrowUpRight size={16} /></a>}
+                  {project.githubUrl && <a href={project.githubUrl} target="_blank" rel="noreferrer"><Github size={15} /> Source</a>}
+                  {!project.liveUrl && !project.githubUrl && <span className="confidential-note"><LockKeyhole size={14} /> Details available on request</span>}
                 </div>
               </div>
-            </div>
+            </article>
           ))}
         </div>
       </div>

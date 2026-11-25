@@ -1,10 +1,11 @@
-import React from "react";
-
 export default function Footer() {
   return (
-    <footer className="border-t border-purple-500/20 py-8 px-4 text-center text-gray-500">
-      <p className="mb-4">© 2025 Chukwuebuka Edward. All rights reserved.</p>
-      <p className="text-sm">Crafted with passion using React & Tailwind CSS</p>
+    <footer className="site-footer">
+      <div className="page-shell">
+        <span>© {new Date().getFullYear()} Promise Omorotionmwan</span>
+        <span>Mechanical × Software Engineer</span>
+        <a href="#home">Back to top ↑</a>
+      </div>
     </footer>
   );
 }

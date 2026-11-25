@@ -1,59 +1,70 @@
-import React, { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ArrowUpRight, Menu, X } from "lucide-react";
 import { scrollToSection } from "../utils/scrollToSection";
+
+const navigation = [
+  ["work", "Work"],
+  ["expertise", "Expertise"],
+  ["experience", "Experience"],
+  ["about", "About"],
+];
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
-  const navItems = ["home", "about", "experience", "projects", "contact"];
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const goTo = (section) => {
+    scrollToSection(section);
+    setIsMenuOpen(false);
+  };
 
   return (
-    <nav className="fixed w-full z-50 bg-black/80 backdrop-blur-xl border-b border-purple-500/20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-        {/* Logo */}
-        <div className="text-3xl font-black bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
-          CE
-        </div>
+    <header className={`site-header ${scrolled ? "site-header--scrolled" : ""}`}>
+      <nav className="nav-shell" aria-label="Primary navigation">
+        <button className="wordmark" onClick={() => goTo("home")} aria-label="Go to home">
+          <span className="wordmark-mark">PO</span>
+          <span className="wordmark-name">Promise Omorotionmwan</span>
+        </button>
 
-        {/* Desktop Menu */}
-        <div className="hidden md:flex gap-8">
-          {navItems.map((item) => (
-            <button
-              key={item}
-              onClick={() => scrollToSection(item)}
-              className="capitalize text-sm font-semibold hover:text-purple-400 transition-all duration-300 relative group"
-            >
-              {item}
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-pink-400 group-hover:w-full transition-all duration-300"></span>
-            </button>
+        <div className="nav-links">
+          {navigation.map(([id, label]) => (
+            <button key={id} onClick={() => goTo(id)}>{label}</button>
           ))}
         </div>
 
-        {/* Mobile Menu Button */}
-        <button
-          className="md:hidden"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-        >
-          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        <button className="nav-cta" onClick={() => goTo("contact")}>
+          Start a conversation <ArrowUpRight size={16} />
         </button>
-      </div>
 
-      {/* Mobile Menu */}
+        <button
+          className="menu-toggle"
+          onClick={() => setIsMenuOpen((open) => !open)}
+          aria-expanded={isMenuOpen}
+          aria-label={isMenuOpen ? "Close navigation" : "Open navigation"}
+        >
+          {isMenuOpen ? <X /> : <Menu />}
+        </button>
+      </nav>
+
       {isMenuOpen && (
-        <div className="md:hidden bg-black/95 border-t border-purple-500/20">
-          <div className="flex flex-col p-4 gap-4">
-            {navItems.map((item) => (
-              <button
-                key={item}
-                onClick={() => scrollToSection(item)}
-                className="capitalize text-sm font-semibold hover:text-purple-400 transition-colors text-left py-2 border-l-2 border-transparent hover:border-purple-400 pl-3"
-              >
-                {item}
-              </button>
-            ))}
-          </div>
+        <div className="mobile-menu">
+          {navigation.map(([id, label], index) => (
+            <button key={id} onClick={() => goTo(id)}>
+              <span>0{index + 1}</span>{label}
+            </button>
+          ))}
+          <button className="mobile-contact" onClick={() => goTo("contact")}>
+            Start a conversation <ArrowUpRight size={18} />
+          </button>
         </div>
       )}
-    </nav>
+    </header>
   );
 }
